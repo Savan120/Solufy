@@ -1,0 +1,32 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-12-12 18:43:26.601151",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "version"
+ ],
+ "fields": [
+  {
+   "fieldname": "version",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Version",
+   "options": "ERP Version"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2024-12-12 18:44:09.360121",
+ "modified_by": "Administrator",
+ "module": "Solufy",
+ "name": "MultiSelect Version",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

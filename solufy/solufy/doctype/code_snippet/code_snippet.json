@@ -1,0 +1,89 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:title",
+ "creation": "2024-12-12 18:36:09.882030",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "title",
+  "language_type",
+  "column_break_wkob",
+  "erp_version",
+  "section_break_ipuf",
+  "created_by",
+  "description",
+  "reference_link"
+ ],
+ "fields": [
+  {
+   "fieldname": "column_break_wkob",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "erp_version",
+   "fieldtype": "Table MultiSelect",
+   "label": "ERP Version",
+   "options": "MultiSelect Version"
+  },
+  {
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "label": "Title",
+   "unique": 1
+  },
+  {
+   "fieldname": "section_break_ipuf",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "created_by",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Created By",
+   "options": "User"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Text Editor",
+   "label": "Description"
+  },
+  {
+   "fieldname": "reference_link",
+   "fieldtype": "Small Text",
+   "label": "Reference Link"
+  },
+  {
+   "fieldname": "language_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Language Type",
+   "options": "Language Type"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-12-12 18:51:17.736020",
+ "modified_by": "Administrator",
+ "module": "Solufy",
+ "name": "Code Snippet",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
