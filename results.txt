@@ -1,0 +1,454 @@
+                             
+                             
+┌───────────────────────────┐
+│ 71 Blocking Code Findings │
+└───────────────────────────┘
+                                                              
+  [36m[22m[24m  frappe-semgrep-rules/rules/code_quality.py [0m
+       [1m[24mfrappe-semgrep-rules.rules.overusing-args[0m                                        
+          Using args as argument in functions reduces readability and allows passing ill-specified
+          arguments. Avoid using `args` as only argument unless absolutely necessary.             
+                                                                                                  
+            2┆ [1m[24mdef function(args):[0m
+            3┆ [1m[24m  args.updates = 1[0m
+            4┆ [1m[24m  return args[0m
+                                                                    
+  [36m[22m[24m  frappe-semgrep-rules/rules/frappe_correctness.js [0m
+       [1m[24mfrappe-semgrep-rules.rules.frappe-incorrect-debounce[0m                                 
+          `debounce` should be used to create a debounced version of function and should only be      
+          called once. If the function is called multiple times then each time a new debounced version
+          of function gets created and you don't actually achieve debounce behaviour.                 
+                                                                                                      
+            3┆ [1m[24mfrappe.utils.debounce(() => {}, 1000)();[0m
+                                                                    
+  [36m[22m[24m  frappe-semgrep-rules/rules/frappe_correctness.py [0m
+       [1m[24mfrappe-semgrep-rules.rules.frappe-breaks-multitenancy[0m                            
+          variable global variable does not respect database multitenancy, consider wrapping it in
+          function or method call.                                                                
+                                                                                                  
+            9┆ [1m[24mvariable = frappe.db.get_value("ABC", "x", "y")[0m
+            ⋮┆----------------------------------------
+       [1m[24mfrappe-semgrep-rules.rules.frappe-breaks-multitenancy[0m                             
+          precision global variable does not respect database multitenancy, consider wrapping it in
+          function or method call.                                                                 
+                                                                                                   
+           12┆ [1m[24mprecision = cint(frappe.db.get_single_value("System Settings", "float_precision"))[0m
+            ⋮┆----------------------------------------
+       [1m[24mfrappe-semgrep-rules.rules.frappe-breaks-multitenancy[0m                         
+          items global variable does not respect database multitenancy, consider wrapping it in
+          function or method call.                                                             
+                                                                                               
+           16┆ [1m[24mitems = list(frappe.get_all("Item"))[0m
+            ⋮┆----------------------------------------
+       [1m[24mfrappe-semgrep-rules.rules.frappe-breaks-multitenancy[0m                          
+          config global variable does not respect database multitenancy, consider wrapping it in
+          function or method call.                                                              
+                                                                                                
+           19┆ [1m[24mconfig = bool(frappe.local.conf.config)[0m
+            ⋮┆----------------------------------------
+       [1m[24mfrappe-semgrep-rules.rules.frappe-breaks-multitenancy[0m                        
+          lang global variable does not respect database multitenancy, consider wrapping it in
+          function or method call.                                                            
+                                                                                              
+           22┆ [1m[24mlang = str(frappe.lang)[0m
+            ⋮┆----------------------------------------
+       [1m[24mfrappe-semgrep-rules.rules.frappe-breaks-multitenancy[0m                           
+          testing global variable does not respect database multitenancy, consider wrapping it in
+          function or method call.                                                               
+                                                                                                 
+           25┆ [1m[24mtesting = bool(frappe.flags.in_test)[0m
+            ⋮┆----------------------------------------
+       [1m[24mfrappe-semgrep-rules.rules.frappe-modifying-but-not-comitting[0m                       
+          DocType modified in self.on_submit. Please check if modification of self.status is commited
+          to database.                                                                               
+                                                                                                     
+           29┆ [1m[24mdef on_submit(self):[0m
+           30┆ [1m[24m    if self.value_of_goods ==  
+  0:[0m                                              
+           31┆ [1m[24m            frappe.throw(_('Value of goods      
+  cannot be 0'))[0m                                                   
+           32┆ [1m[24m    self.status =           
+  'Submitted'[0m                                  
+           33┆ [1m[24m[0m
+           34┆ [1m[24m    # ok:                          
+  frappe-breaks-multitenancy[0m                          
+           35┆ [1m[24m    variable = frappe.db.get_value("ABC", "x",    
+  "y")[0m                                                               
+           36┆ [1m[24m[0m
+           37┆ [1m[24m    # ok:                          
+  frappe-breaks-multitenancy[0m                          
+           38┆ [1m[24m    items =                            
+  list(frappe.get_all("Item"))[0m                            
+             [hid 3 additional lines, adjust with --max-lines-per-finding] 
+       [1m[24mfrappe-semgrep-rules.rules.frappe-breaks-multitenancy[0m                            
+          variable global variable does not respect database multitenancy, consider wrapping it in
+          function or method call.                                                                
+                                                                                                  
+           46┆ [1m[24mvariable = frappe.db.get_value("ABC", "x", "y")[0m
+            ⋮┆----------------------------------------
+       [1m[24mfrappe-semgrep-rules.rules.frappe-modifying-but-not-comitting-other-method[0m     
+          self.tainted_method is called from self.on_submit, check if changes to self.status are
+          commited to database.                                                                 
+                                                                                                
+           86┆ [1m[24mclass DoctypeClass(Document):[0m
+           87┆ [1m[24m    def                
+  on_submit(self):[0m                        
+           88┆ [1m[24m                     
+  self.good_method()[0m                    
+           89┆ [1m[24m                        
+  self.tainted_method()[0m                    
+           90┆ [1m[24m[0m
+           91┆ [1m[24m    def                     
+  tainted_method(self):[0m                        
+           92┆ [1m[24m            self.status =
+  "uptate"[0m                                  
+            ⋮┆----------------------------------------
+       [1m[24mfrappe-semgrep-rules.rules.frappe-query-debug-statement[0m
+          Did you mean to leave this debug statement in?                
+                                                                        
+          117┆ [1m[24mfrappe.db.get_value("DocType", "name", debug=True)[0m
+            ⋮┆----------------------------------------
+          120┆ [1m[24mfrappe.db.get_value("DocType", "name", debug=1)[0m
+            ⋮┆----------------------------------------
+       [1m[24mfrappe-semgrep-rules.rules.frappe-overriding-local-proxies[0m                      
+          frappe.db is a local proxy, assigning it to another object will remove the proxying and
+          replace it with another object. Use frappe.local.db instead.                           
+                                                                                                 
+          123┆ [1m[24mfrappe.db = Database()[0m
+            ⋮┆----------------------------------------
+       [1m[24mfrappe-semgrep-rules.rules.frappe-overriding-local-proxies[0m                           
+          frappe.request is a local proxy, assigning it to another object will remove the proxying and
+          replace it with another object. Use frappe.local.request instead.                           
+                                                                                                      
+          130┆ [1m[24mfrappe.request = {}[0m
+            ⋮┆----------------------------------------
+       [1m[24mfrappe-semgrep-rules.rules.frappe-single-value-type-safety[0m                           
+          If "System Settings" is a single doctype then using `frappe.db.get_value` is discouraged for
+          fetching value from single doctypes. frappe.db.get_value for single doctype is not type     
+          safe, use `frappe.db.get_single_value` instead.                                             
+                                                                                                      
+  [32m[22m[24m         ▶▶┆ Autofix ▶[0m frappe.db.get_single_value("System Settings", "duration")
+          135┆ duration = [1m[24mfrappe.db.get_value("System Settings", None, "duration")[0m or 24
+            ⋮┆----------------------------------------
+       [1m[24mfrappe-semgrep-rules.rules.frappe-after-save-controller-hook[0m                      
+          `after_save` is not a valid DocType controller hook. Please have a look at the hooks     
+          available:                                                                               
+          https://frappeframework.com/docs/v13/user/en/basics/doctypes/controllers#controller-hooks
+                                                                                                   
+          144┆ [1m[24mclass DoctypeNew(Document):[0m
+          145┆ [1m[24m    def                  
+  before_save(self):[0m                        
+          146┆ [1m[24m                     
+  self.good_method()[0m                    
+          147┆ [1m[24m[0m
+          148┆ [1m[24m    def                 
+  after_save(self):[0m                        
+          149┆ [1m[24m                    
+  self.bad_method()[0m                    
+            ⋮┆----------------------------------------
+       [1m[24mfrappe-semgrep-rules.rules.frappe-qb-incorrect-order-usage[0m       
+          `order` in `orderby` has to be a keyword argument like `.orderby("time",
+          order=frappe.qb.desc)`. Re-check the generated query.                   
+                                                                                  
+          159┆ [1m[24mfrappe.qb.from_("some table").select("*").orderby("somefield", frappe.qb.desc)[0m.run()
+            ⋮┆----------------------------------------
+       [1m[24mfrappe-semgrep-rules.rules.frappe-cache-breaks-multitenancy[0m                   
+          redis.set and redis.get do not support multitenancy, use set_value/get_value instead.
+                                                                                               
+          168┆ [1m[24mc = frappe.cache()[0m
+          169┆ [1m[24mc.set("blah", "bleh")[0m
+            ⋮┆----------------------------------------
+          171┆ [1m[24mfrappe.cache().get("blah")[0m
+            ⋮┆----------------------------------------
+       [1m[24mfrappe-semgrep-rules.rules.frappe-no-functional-code[0m                      
+          Mixing functional programming usually yields in confusing code and bugs. Use list
+          comprehensions or generators instead.                                            
+                                                                                           
+          182┆ [1m[24mmap(lambda x: x, [])[0m
+            ⋮┆----------------------------------------
+          185┆ [1m[24mfilter(lambda x: x, [])[0m
+            ⋮┆----------------------------------------
+          188┆ [1m[24mmap(lambda x: x, filter(lambda x: x, []))[0m
+            ⋮┆----------------------------------------
+          188┆ map(lambda x: x, [1m[24mfilter(lambda x: x, [])[0m)
+            ⋮┆----------------------------------------
+       [1m[24mfrappe-semgrep-rules.rules.frappe-monkey-patching-not-allowed[0m                  
+          has_permission being monkey patched by app. Use hooks provided by framework instead of
+          patching behaviour at runtime.                                                        
+                                                                                                
+          192┆ [1m[24mfrom frappe import permissions[0m
+          193┆ [1m[24m[0m
+          194┆ [1m[24mpermissions.has_permission = lambda : True[0m
+            ⋮┆----------------------------------------
+       [1m[24mfrappe-semgrep-rules.rules.frappe-monkey-patching-not-allowed[0m                
+          xyz being monkey patched by app. Use hooks provided by framework instead of patching
+          behaviour at runtime.                                                               
+                                                                                              
+          192┆ [1m[24mfrom frappe import permissions[0m
+          193┆ [1m[24m[0m
+          194┆ [1m[24mpermissions.has_permission = lambda : True[0m
+          195┆ [1m[24m[0m
+          196┆ [1m[24m[0m
+          197┆ [1m[24m# ruleid: frappe-monkey-patching-not-allowed[0m
+          198┆ [1m[24mfrom frappe import permissions[0m
+          199┆ [1m[24m[0m
+          200┆ [1m[24mpermissions.has_permission.xyz = lambda : True[0m
+            ⋮┆----------------------------------------
+          198┆ [1m[24mfrom frappe import permissions[0m
+          199┆ [1m[24m[0m
+          200┆ [1m[24mpermissions.has_permission.xyz = lambda : True[0m
+            ⋮┆----------------------------------------
+          203┆ [1m[24mfrom frappe.permissions import has_permission[0m
+          204┆ [1m[24m[0m
+          205┆ [1m[24mhas_permission.xyz = lambda : True[0m
+                                                        
+  [36m[22m[24m  frappe-semgrep-rules/rules/report.py [0m
+       [1m[24mfrappe-semgrep-rules.rules.frappe-missing-translate-function-in-report-python[0m   
+          All user facing text must be wrapped in translate function. Please refer to translation
+          documentation. https://frappeframework.com/docs/user/en/guides/basics/translations     
+                                                                                                 
+            5┆ [1m[24m{"label": "Field Label"}[0m
+            ⋮┆----------------------------------------
+            8┆ [1m[24mdict(label="Field Label")[0m
+                                                          
+  [36m[22m[24m  frappe-semgrep-rules/rules/security.py [0m
+       [1m[24mfrappe-semgrep-rules.rules.frappe-codeinjection-eval[0m                             
+          Detected the use of eval(). eval() can be dangerous if used to evaluate dynamic content.
+          Avoid it or use safe_eval().                                                            
+                                                                                                  
+            3┆ [1m[24meval(input)[0m
+                                                           
+  [36m[22m[24m  frappe-semgrep-rules/rules/translate.js [0m
+       [1m[24mfrappe-semgrep-rules.rules.frappe-translation-empty-string[0m
+          Empty string is useless for translation. Please refer:           
+          https://frappeframework.com/docs/user/en/translations            
+                                                                           
+            2┆ [1m[24m__("")[0m
+            ⋮┆----------------------------------------
+            4┆ [1m[24m__('')[0m
+            ⋮┆----------------------------------------
+       [1m[24mfrappe-semgrep-rules.rules.frappe-translation-js-formatting[0m 
+          Template strings are not allowed for text formatting. Please refer:
+          https://frappeframework.com/docs/user/en/translations              
+                                                                             
+           10┆ [1m[24m__(`Welcome ${full_name}, get started with ERPNext in just a few clicks.`)[0m;
+            ⋮┆----------------------------------------
+       [1m[24mfrappe-semgrep-rules.rules.frappe-translation-trailing-spaces[0m          
+          Trailing or leading whitespace not allowed in translate strings. Please refer:
+          https://frappeframework.com/docs/user/en/translations                         
+                                                                                        
+           20┆ [1m[24m__(' this is not ok ')[0m;
+            ⋮┆----------------------------------------
+           22┆ [1m[24m__('this is not ok ')[0m;
+            ⋮┆----------------------------------------
+           24┆ [1m[24m__(' this is not ok')[0m;
+            ⋮┆----------------------------------------
+       [1m[24mfrappe-semgrep-rules.rules.frappe-translation-js-splitting[0m                 
+          Do not split strings inside translate function. Do not concatenate using translate
+          functions. Please refer: https://frappeframework.com/docs/user/en/translations    
+                                                                                            
+           33┆ [1m[24m__('You have' + 'subscribers in your mailing list.')[0m
+            ⋮┆----------------------------------------
+           36┆ [1m[24m__('You have {0} subscribers' +[0m
+           37┆ [1m[24m    'in your mailing list', [subscribers.length])[0m
+            ⋮┆----------------------------------------
+           43┆ [1m[24m__('You have {0} subscribers \[0m
+           44┆ [1m[24m    [0min your mailing list', [subscribers.length])
+                                                           
+  [36m[22m[24m  frappe-semgrep-rules/rules/translate.py [0m
+       [1m[24mfrappe-semgrep-rules.rules.frappe-translation-python-formatting[0m                      
+          Only positional formatters are allowed and formatting should not be done before translating.
+          Please refer: https://frappeframework.com/docs/user/en/translations                         
+                                                                                                      
+           11┆ [1m[24m_('Welcome %s, get started with ERPNext in just a few clicks.' % full_name)[0m
+            ⋮┆----------------------------------------
+           13┆ [1m[24m_('Welcome %(name)s, get started with ERPNext in just a few clicks.' % {'name': full_name})[0m
+            ⋮┆----------------------------------------
+           16┆ [1m[24m_('Welcome {0}, get started with ERPNext in just a few clicks.'.format(full_name))[0m
+            ⋮┆----------------------------------------
+           19┆ [1m[24mmsg = "Welcome %s, get started with ERPNext in just a few clicks."  % full_name[0m
+           20┆ [1m[24mrandom_statement = "random statement"[0m
+           21┆ [1m[24m_(msg)[0m
+            ⋮┆----------------------------------------
+           19┆ [1m[24mmsg = "Welcome %s, get started with ERPNext in just a few clicks."  % full_name[0m
+           20┆ [1m[24mrandom_statement = "random statement"[0m
+           21┆ [1m[24m_(msg)[0m
+           22┆ [1m[24m[0m
+           23┆ [1m[24m# ruleid: frappe-translation-python-formatting[0m
+           24┆ [1m[24mmsg = "Welcome {0}, get started with ERPNext in just a few clicks.".format(full_name)[0m
+           25┆ [1m[24mrandom_statement = "random statement"[0m
+           26┆ [1m[24m_(msg)[0m
+            ⋮┆----------------------------------------
+           19┆ [1m[24mmsg = "Welcome %s, get started with ERPNext in just a few clicks."  % full_name[0m
+           20┆ [1m[24mrandom_statement = "random statement"[0m
+           21┆ [1m[24m_(msg)[0m
+           22┆ [1m[24m[0m
+           23┆ [1m[24m# ruleid: frappe-translation-python-formatting[0m
+           24┆ [1m[24mmsg = "Welcome {0}, get started with ERPNext in just a few clicks.".format(full_name)[0m
+           25┆ [1m[24mrandom_statement = "random statement"[0m
+           26┆ [1m[24m_(msg)[0m
+           27┆ [1m[24m[0m
+           28┆ [1m[24m# ruleid: frappe-translation-python-formatting[0m
+             [hid 3 additional lines, adjust with --max-lines-per-finding] 
+           24┆ [1m[24mmsg = "Welcome {0}, get started with ERPNext in just a few clicks.".format(full_name)[0m
+           25┆ [1m[24mrandom_statement = "random statement"[0m
+           26┆ [1m[24m_(msg)[0m
+            ⋮┆----------------------------------------
+           24┆ [1m[24mmsg = "Welcome {0}, get started with ERPNext in just a few clicks.".format(full_name)[0m
+           25┆ [1m[24mrandom_statement = "random statement"[0m
+           26┆ [1m[24m_(msg)[0m
+           27┆ [1m[24m[0m
+           28┆ [1m[24m# ruleid: frappe-translation-python-formatting[0m
+           29┆ [1m[24mmsg = f"Welcome {full_name}, get started with ERPNext in just a few clicks."[0m
+           30┆ [1m[24mrandom_statement = "random statement"[0m
+           31┆ [1m[24m_(msg)[0m
+            ⋮┆----------------------------------------
+           29┆ [1m[24mmsg = f"Welcome {full_name}, get started with ERPNext in just a few clicks."[0m
+           30┆ [1m[24mrandom_statement = "random statement"[0m
+           31┆ [1m[24m_(msg)[0m
+            ⋮┆----------------------------------------
+       [1m[24mfrappe-semgrep-rules.rules.frappe-breaks-multitenancy[0m                                
+          msg global variable does not respect database multitenancy, consider wrapping it in function
+          or method call.                                                                             
+                                                                                                      
+           47┆ [1m[24mmsg = _(" You have {0} pending invoice ")[0m
+            ⋮┆----------------------------------------
+       [1m[24mfrappe-semgrep-rules.rules.frappe-translation-trailing-spaces[0m          
+          Trailing or leading whitespace not allowed in translate strings. Please refer:
+          https://frappeframework.com/docs/user/en/translations                         
+                                                                                        
+           47┆ msg = [1m[24m_(" You have {0} pending invoice ")[0m
+            ⋮┆----------------------------------------
+       [1m[24mfrappe-semgrep-rules.rules.frappe-breaks-multitenancy[0m                                
+          msg global variable does not respect database multitenancy, consider wrapping it in function
+          or method call.                                                                             
+                                                                                                      
+           49┆ [1m[24mmsg = _("You have {0} pending invoice ")[0m
+            ⋮┆----------------------------------------
+       [1m[24mfrappe-semgrep-rules.rules.frappe-translation-trailing-spaces[0m          
+          Trailing or leading whitespace not allowed in translate strings. Please refer:
+          https://frappeframework.com/docs/user/en/translations                         
+                                                                                        
+           49┆ msg = [1m[24m_("You have {0} pending invoice ")[0m
+            ⋮┆----------------------------------------
+       [1m[24mfrappe-semgrep-rules.rules.frappe-breaks-multitenancy[0m                                
+          msg global variable does not respect database multitenancy, consider wrapping it in function
+          or method call.                                                                             
+                                                                                                      
+           51┆ [1m[24mmsg = _(" You have {0} pending invoice")[0m
+            ⋮┆----------------------------------------
+       [1m[24mfrappe-semgrep-rules.rules.frappe-translation-trailing-spaces[0m          
+          Trailing or leading whitespace not allowed in translate strings. Please refer:
+          https://frappeframework.com/docs/user/en/translations                         
+                                                                                        
+           51┆ msg = [1m[24m_(" You have {0} pending invoice")[0m
+            ⋮┆----------------------------------------
+       [1m[24mfrappe-semgrep-rules.rules.frappe-breaks-multitenancy[0m                                
+          msg global variable does not respect database multitenancy, consider wrapping it in function
+          or method call.                                                                             
+                                                                                                      
+           54┆ [1m[24mmsg = ' ' + _("You have {0} pending invoices") + ' '[0m
+            ⋮┆----------------------------------------
+       [1m[24mfrappe-semgrep-rules.rules.frappe-translation-python-formatting[0m                      
+          Only positional formatters are allowed and formatting should not be done before translating.
+          Please refer: https://frappeframework.com/docs/user/en/translations                         
+                                                                                                      
+           57┆ [1m[24m_(f"can not format like this - {subscribers}")[0m
+            ⋮┆----------------------------------------
+       [1m[24mfrappe-semgrep-rules.rules.frappe-translation-python-splitting[0m             
+          Do not split strings inside translate function. Do not concatenate using translate
+          functions. Please refer: https://frappeframework.com/docs/user/en/translations    
+                                                                                            
+           59┆ [1m[24m_(f"what" + f"this is also not cool")[0m
+            ⋮┆----------------------------------------
+       [1m[24mfrappe-semgrep-rules.rules.frappe-translation-empty-string[0m
+          Empty string is useless for translation. Please refer:           
+          https://frappeframework.com/docs/user/en/translations            
+                                                                           
+           63┆ [1m[24m_("")[0m
+            ⋮┆----------------------------------------
+           65┆ [1m[24m_('')[0m
+            ⋮┆----------------------------------------
+       [1m[24mfrappe-semgrep-rules.rules.overusing-args[0m                                        
+          Using args as argument in functions reduces readability and allows passing ill-specified
+          arguments. Avoid using `args` as only argument unless absolutely necessary.             
+                                                                                                  
+           70┆ [1m[24mdef __init__([0m
+           71┆ [1m[24m       
+  args[0m                    
+           72┆ [1m[24m     
+  ):[0m                    
+           73┆ [1m[24m       
+  pass[0m                    
+                                                    
+  [36m[22m[24m  frappe-semgrep-rules/rules/ux.js [0m
+       [1m[24mfrappe-semgrep-rules.rules.frappe-missing-translate-function-js[0m                 
+          All user facing text must be wrapped in translate function. Please refer to translation
+          documentation. https://frappeframework.com/docs/user/en/guides/basics/translations     
+                                                                                                 
+            6┆ [1m[24mfrappe.msgprint('What')[0m;
+            ⋮┆----------------------------------------
+           12┆ [1m[24mfrappe.show_alert('What')[0m;
+            ⋮┆----------------------------------------
+       [1m[24mfrappe-semgrep-rules.rules.frappe-missing-translation-button-text[0m          
+          All user facing button text must be wrapped in translate function. Please refer to
+          translation documentation.                                                        
+          https://frappeframework.com/docs/user/en/guides/basics/translations               
+                                                                                            
+           19┆ [1m[24mfrm.add_custom_button("Transfer Asset", function() {[0m
+           20┆ [1m[24m[0m
+           21┆ [1m[24m})[0m
+                                                    
+  [36m[22m[24m  frappe-semgrep-rules/rules/ux.py [0m
+       [1m[24mfrappe-semgrep-rules.rules.frappe-missing-translate-function-python[0m             
+          All user facing text must be wrapped in translate function. Please refer to translation
+          documentation. https://frappeframework.com/docs/user/en/guides/basics/translations     
+                                                                                                 
+            6┆ [1m[24mthrow("Error Occured")[0m
+            ⋮┆----------------------------------------
+            9┆ [1m[24mfrappe.throw("Error Occured")[0m
+            ⋮┆----------------------------------------
+           12┆ [1m[24mfrappe.msgprint("Useful message")[0m
+            ⋮┆----------------------------------------
+           15┆ [1m[24mmsgprint("Useful message")[0m
+            ⋮┆----------------------------------------
+       [1m[24mfrappe-semgrep-rules.rules.frappe-breaks-multitenancy[0m                               
+          translatedmessage global variable does not respect database multitenancy, consider wrapping
+          it in function or method call.                                                             
+                                                                                                     
+           19┆ [1m[24mtranslatedmessage = _("Hello")[0m
+            ⋮┆----------------------------------------
+       [1m[24mfrappe-semgrep-rules.rules.frappe-missing-translate-function-python[0m             
+          All user facing text must be wrapped in translate function. Please refer to translation
+          documentation. https://frappeframework.com/docs/user/en/guides/basics/translations     
+                                                                                                 
+           36┆ [1m[24mfrappe.throw("Some Text" + not_translated + "More text")[0m
+            ⋮┆----------------------------------------
+           45┆ [1m[24mfrappe.throw(_("Some Text"), title="Warning")[0m
+                            
+  BLOCKING CODE RULES FIRED:
+    frappe-semgrep-rules.rules.frappe-after-save-controller-hook
+    frappe-semgrep-rules.rules.frappe-breaks-multitenancy
+    frappe-semgrep-rules.rules.frappe-cache-breaks-multitenancy
+    frappe-semgrep-rules.rules.frappe-codeinjection-eval
+    frappe-semgrep-rules.rules.frappe-incorrect-debounce
+    frappe-semgrep-rules.rules.frappe-missing-translate-function-in-report-python
+    frappe-semgrep-rules.rules.frappe-missing-translate-function-js
+    frappe-semgrep-rules.rules.frappe-missing-translate-function-python
+    frappe-semgrep-rules.rules.frappe-missing-translation-button-text
+    frappe-semgrep-rules.rules.frappe-modifying-but-not-comitting
+    frappe-semgrep-rules.rules.frappe-modifying-but-not-comitting-other-method
+    frappe-semgrep-rules.rules.frappe-monkey-patching-not-allowed
+    frappe-semgrep-rules.rules.frappe-no-functional-code
+    frappe-semgrep-rules.rules.frappe-overriding-local-proxies
+    frappe-semgrep-rules.rules.frappe-qb-incorrect-order-usage
+    frappe-semgrep-rules.rules.frappe-query-debug-statement
+    frappe-semgrep-rules.rules.frappe-single-value-type-safety
+    frappe-semgrep-rules.rules.frappe-translation-empty-string
+    frappe-semgrep-rules.rules.frappe-translation-js-formatting
+    frappe-semgrep-rules.rules.frappe-translation-js-splitting
+    frappe-semgrep-rules.rules.frappe-translation-python-formatting
+    frappe-semgrep-rules.rules.frappe-translation-python-splitting
+    frappe-semgrep-rules.rules.frappe-translation-trailing-spaces
+    frappe-semgrep-rules.rules.overusing-args
+

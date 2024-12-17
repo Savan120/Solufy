@@ -137,13 +137,20 @@ app_license = "mit"
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-# 	}
-# }
+# custom_app_name/custom_app_name/hooks.py
+
+doc_events = {
+    "Issue": {
+        "validate": "solufy.custom_issue.validate_issue_time_involvement",
+        "onload": "solufy.custom_issue.calculate_custom_actual_hours"
+
+    },
+    "Timesheet": {
+        "validate": "solufy.custom_timesheet.update_issue_with_actual_time"
+    }
+    
+}
+
 
 # Scheduled Tasks
 # ---------------

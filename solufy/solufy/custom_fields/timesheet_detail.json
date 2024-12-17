@@ -1,0 +1,22 @@
+{
+ "Timesheet Detail": [
+  {
+   "dt": "Timesheet Detail",
+   "fieldname": "custom_issue",
+   "fieldtype": "Link",
+   "insert_after": "custom_billable_hrs",
+   "label": "Issue",
+   "module": "Solufy",
+   "options": "Issue"
+  },
+  {
+   "dt": "Timesheet Detail",
+   "fetch_from": "custom_issue.custom_time_involvment",
+   "fieldname": "custom_billable_hrs",
+   "fieldtype": "Float",
+   "insert_after": "completed",
+   "label": "Billable Hrs",
+   "module": "Solufy"
+  }
+ ]
+}
